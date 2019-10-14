@@ -1,6 +1,6 @@
 language: python
 python:
-  - "3.0"
+  - "3"
 script: python3 pytest/__init__.py
 deploy:
   provider: pypi
