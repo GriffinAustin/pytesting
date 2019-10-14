@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="pytesting-griffinaustin",
+    name="pytesting",
     version="0",
     author="Griffin Austin",
     author_email="griffinaustin@protonmail.com",

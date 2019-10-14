@@ -157,6 +157,7 @@ def handle_unsuccess(ef, warning_level, test_name=None):
         if test_name is None:
             test_name = inspect.getouterframes(inspect.currentframe())[2][3]
         print("\t{} -> {}\n".format(test_name, ef.args[0]), file=sys.stderr)
+        print_color("\t{} -> {}\n".format(test_name, ef.args[0]), Style.RED)
 
 
 def make_fail(reason):  # Decorator
