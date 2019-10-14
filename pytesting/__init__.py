@@ -1,2 +1,2 @@
-import pytesting.testing
+from .testing import *
 name = "pytesting"
