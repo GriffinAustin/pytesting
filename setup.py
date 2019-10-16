@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pytesting",
-    version="0",
+    version="0.1.0",
     author="Griffin Austin",
     author_email="griffinaustin@protonmail.com",
     description="A simple and efficient test framework",
