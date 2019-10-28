@@ -12,6 +12,9 @@
 * **Customizable** - Because of its innate simplicity, `pytesting` is easily customizable for a variety of needs
 
 ## Documentation
+**Install using pip:**
+`$ pip install pytesting`
+
 For full documentation, visit https://github.com/GriffinAustin/pytesting/wiki
 
 ## Bugs and Feature Requests
