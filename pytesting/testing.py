@@ -26,8 +26,9 @@ class TestBase:
               .format(num_tests, self.proc_time, self.num_successful, self.num_failed, self.num_errored,
                       self.num_skipped))
 
+    # TODO: Check for NoneType in assertions
     def assert_equal(self, first, second):
-        """Compare two values, raising exception on failure and error."""
+        """Compare two values, raise exception on failure and error."""
         try:
             if first == second:
                 self.num_successful += 1
@@ -39,9 +40,47 @@ class TestBase:
         except Handler.NotComparableError as e:
             self.num_errored += 1
             handle_unsuccess(e, self.warning_level)
+            return False
         except Handler.NotEqualFailure as f:
             self.num_failed += 1
             handle_unsuccess(f, self.warning_level)
+            return False
+
+    def assert_unequal(self, first, second):
+        """Compare two values, raise exception on failure and error"""
+        try:
+            if first != second:
+                self.num_successful += 1
+                return True
+            elif type(first) == type(second):  # If first and second are equal but are of same type
+                raise Handler.EqualFailure(first, second)
+            else:  # If first and second are not of same type
+                raise Handler.NotComparableError(first, second)
+        except Handler.NotComparableError as e:
+            self.num_errored += 1
+            handle_unsuccess(e, self.warning_level)
+            return False
+        except Handler.EqualFailure as f:
+            self.num_failed += 1
+            handle_unsuccess(f, self.warning_level)
+            return False
+
+    def assert_true(self, val):
+        """Compare boolean value, raise exception on failure and error"""
+        if bool(val):
+            self.num_successful += 1
+            return True
+        else:
+            self.num_failed += 1
+            return False
+
+    def assert_false(self, val):
+        """Compare boolean value, raise exception on failure and error"""
+        if not bool(val):
+            self.num_successful += 1
+            return True
+        else:
+            self.num_failed += 1
             return False
 
 
@@ -117,6 +156,14 @@ class Handler:
             self.first = first
             self.second = second
 
+    class EqualFailure(TestFailure):
+        def __init__(self, first, second, message=None):
+            if message is None:
+                message = "{}: {} == {}".format(self.__class__.__name__, first, second)
+            super().__init__(message)
+            self.first = first
+            self.second = second
+
     class NotComparableError(ComparisonError):
         def __init__(self, first, second, message=None):
             if message is None:
@@ -156,7 +203,6 @@ def handle_unsuccess(ef, warning_level, test_name=None):
     if warning_level >= WarningLevels.LOW:
         if test_name is None:
             test_name = inspect.getouterframes(inspect.currentframe())[2][3]
-        print("\t{} -> {}\n".format(test_name, ef.args[0]), file=sys.stderr)
         print_color("\t{} -> {}\n".format(test_name, ef.args[0]), Style.RED)
 
 
@@ -210,6 +256,9 @@ def skip_if(condition: bool, reason):  # Decorator
             return test_wrapper
 
     return factory
+
+
+# TODO: Implement skip_unless decorator
 
 
 def print_color(text, color):  # TODO: Test functionality on Windows OS
