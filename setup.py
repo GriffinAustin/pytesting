@@ -8,7 +8,7 @@ setuptools.setup(
     version="0.1.0",
     author="Griffin Austin",
     author_email="griffinaustin@protonmail.com",
-    description="A simple and efficient test framework",
+    description="A simple and efficient Python3 test framework",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/GriffinAustin/pytesting",
@@ -19,4 +19,5 @@ setuptools.setup(
         "Operating System :: POSIX :: Linux"
     ],
     python_requires='>=3.0',
+    test_suite="test_all",
 )
