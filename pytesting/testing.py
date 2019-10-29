@@ -67,20 +67,40 @@ class TestBase:
 
     def assert_true(self, val):
         """Compare boolean value, raise exception on failure and error"""
-        if bool(val):
-            self.num_successful += 1
-            return True
-        else:
+        try:
+            if type(val) is not bool:
+                raise TypeError
+            elif bool(val):
+                self.num_successful += 1
+                return True
+            else:
+                raise Handler.TestFailure("{} not True".format(val))
+        except TypeError as e:
+            self.num_errored += 1
+            handle_unsuccess(e, self.warning_level)
+            return False
+        except Handler.TestFailure as f:
             self.num_failed += 1
+            handle_unsuccess(f, self.warning_level)
             return False
 
     def assert_false(self, val):
         """Compare boolean value, raise exception on failure and error"""
-        if not bool(val):
-            self.num_successful += 1
-            return True
-        else:
+        try:
+            if type(val) is not bool:
+                raise TypeError
+            elif not bool(val):
+                self.num_successful += 1
+                return True
+            else:
+                raise Handler.TestFailure("{} not False".format(val))
+        except TypeError as e:
+            self.num_errored += 1
+            handle_unsuccess(e, self.warning_level)
+            return False
+        except Handler.TestFailure as f:
             self.num_failed += 1
+            handle_unsuccess(f, self.warning_level)
             return False
 
 
@@ -254,11 +274,26 @@ def skip_if(condition: bool, reason):  # Decorator
 
         if condition:
             return test_wrapper
+        else:
+            return func
 
     return factory
 
 
-# TODO: Implement skip_unless decorator
+def skip_unless(condition: bool, reason):  # Decorator
+    def factory(func):
+        def test_wrapper(self):
+            self.num_skipped += 1
+            test_name = func.__name__
+            print_color("\t{} -> Forced skip: {}".format(test_name, reason), Style.YELLOW)
+            return False
+
+        if not condition:
+            return test_wrapper
+        else:
+            return func
+
+    return factory
 
 
 def print_color(text, color):  # TODO: Test functionality on Windows OS
