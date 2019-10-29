@@ -2,6 +2,9 @@ language: python
 python:
   - "3.5"
 script: python3 setup.py test
+branches:
+  only:
+    - master
 deploy:
   provider: pypi
   user: "__token__"
